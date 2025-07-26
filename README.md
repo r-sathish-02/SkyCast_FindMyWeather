@@ -1,77 +1,5 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
 # SkyCast - Find My Weather
-## Date:
+## Date:25-07-2025
 ## Objective:
 To build a responsive single-page application using React that allows users to enter a city name and retrieve real-time weather information using the OpenWeatherMap API. This project demonstrates the use of Axios for API calls, React Router for navigation, React Hooks for state management, controlled components with validation, and basic styling with CSS.
 ## Tasks:
@@ -119,9 +47,167 @@ Create a responsive and clean layout using CSS.
 Style form, buttons, weather display cards, and navigation links.
 
 ## Programs:
+App.js:
+```
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Weather from './pages/Weather';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/weather" element={<Weather />} />
+      </Routes>
+    </Router>
+  );
+}
+```
+Home.js:
+```
+import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Home.css';
+
+const Home = () => {
+  const [city, setCity] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+    if (city.trim() === '') {
+      setError('City name is required.');
+    } else {
+      setError('');
+      navigate('/weather', { state: { city } });
+    }
+  }, [city, navigate]);
+
+  return (
+    <div className="home-container">
+      <h1>SkyCast</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter city name"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+        <button type="submit">Get Weather</button>
+        {error && <p className="error">{error}</p>}
+      </form>
+    </div>
+  );
+};
+
+export default Home;
+```
+Weather.js:
+```
+import React, { useState, useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './Weather.css';
+
+const Weather = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const city = location.state?.city;
+
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const API_KEY = '91a1dcf844967b00c27d548af8e7fcda'; 
+  useEffect(() => {
+    if (!city) {
+      navigate('/');
+      return;
+    }
+
+    const fetchWeather = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+        );
+        setWeather(response.data);
+      } catch (error) {
+        alert("Failed to fetch weather data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeather();
+  }, [city, navigate]);
+
+  const tempInFahrenheit = useMemo(() => {
+    if (!weather) return null;
+    return (weather.main.temp * 9) / 5 + 32;
+  }, [weather]);
+
+  if (loading) return <div className="weather-container">Loading...</div>;
+  if (!weather) return null;
+
+  return (
+    <div className="weather-container">
+      <h2>Weather in {weather.name}</h2>
+      <p>Condition: {weather.weather[0].description}</p>
+      <p>Temperature: {weather.main.temp} °C / {tempInFahrenheit.toFixed(2)} °F</p>
+      <p>Humidity: {weather.main.humidity}%</p>
+      <p>Wind Speed: {weather.wind.speed} m/s</p>
+    </div>
+  );
+};
+
+export default Weather;
+```
+Home.css:
+```
+.home-container {
+  text-align: center;
+  margin-top: 100px;
+}
+
+input {
+  padding: 10px;
+  width: 250px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+```
+Weather.css:
+```
+.weather-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.weather-container p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+```
+
+export default App;
 
 ## Output:
+<img width="1918" height="957" alt="image" src="https://github.com/user-attachments/assets/ab202c25-215d-465b-b496-37201edba021" />
+<img width="1918" height="968" alt="image" src="https://github.com/user-attachments/assets/8f6477d5-d2ae-4364-ada1-1dfa0c158bfc" />
+
 
 ## Result:
 A responsive single-page application using React that allows users to enter a city name and retrieve real-time weather information using the OpenWeatherMap API has been built successfully. 
->>>>>>> c3a634282d104c94594c8c837a533374da8d1941
