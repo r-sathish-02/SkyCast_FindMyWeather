@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/r-sathish-02/SkyCast_FindMyWeather.git/static/css/main.a48a812b.css",
-    "main.js": "/r-sathish-02/SkyCast_FindMyWeather.git/static/js/main.78b6f58d.js",
-    "static/js/453.500c4da1.chunk.js": "/r-sathish-02/SkyCast_FindMyWeather.git/static/js/453.500c4da1.chunk.js",
-    "index.html": "/r-sathish-02/SkyCast_FindMyWeather.git/index.html",
-    "main.a48a812b.css.map": "/r-sathish-02/SkyCast_FindMyWeather.git/static/css/main.a48a812b.css.map",
-    "main.78b6f58d.js.map": "/r-sathish-02/SkyCast_FindMyWeather.git/static/js/main.78b6f58d.js.map",
-    "453.500c4da1.chunk.js.map": "/r-sathish-02/SkyCast_FindMyWeather.git/static/js/453.500c4da1.chunk.js.map"
+    "main.css": "/SkyCast_FindMyWeather/static/css/main.a48a812b.css",
+    "main.js": "/SkyCast_FindMyWeather/static/js/main.de81b9e5.js",
+    "static/js/453.500c4da1.chunk.js": "/SkyCast_FindMyWeather/static/js/453.500c4da1.chunk.js",
+    "index.html": "/SkyCast_FindMyWeather/index.html",
+    "main.a48a812b.css.map": "/SkyCast_FindMyWeather/static/css/main.a48a812b.css.map",
+    "main.de81b9e5.js.map": "/SkyCast_FindMyWeather/static/js/main.de81b9e5.js.map",
+    "453.500c4da1.chunk.js.map": "/SkyCast_FindMyWeather/static/js/453.500c4da1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a48a812b.css",
-    "static/js/main.78b6f58d.js"
+    "static/js/main.de81b9e5.js"
   ]
 }
